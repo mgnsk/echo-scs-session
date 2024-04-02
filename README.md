@@ -1,10 +1,17 @@
 # Echo SCS Session Middleware
 
-[![GoDoc](https://godoc.org/github.com/spazzymoto/echo-scs-session?status.png)](https://pkg.go.dev/github.com/spazzymoto/echo-scs-session?tab=doc)
-[![Go report card](https://goreportcard.com/badge/github.com/spazzymoto/echo-scs-session)](https://goreportcard.com/report/github.com/spazzymoto/echo-scs-session)
-[![Test coverage](http://gocover.io/_badge/github.com/spazzymoto/echo-scs-session)](https://gocover.io/github.com/spazzymoto/echo-scs-session)
+[![GoDoc](https://godoc.org/github.com/canidam/echo-scs-session?status.png)](https://pkg.go.dev/github.com/canidam/echo-scs-session?tab=doc)
+[![Go report card](https://goreportcard.com/badge/github.com/canidam/echo-scs-session)](https://goreportcard.com/report/github.com/canidam/echo-scs-session)
 
 All credit must go to [alexedwards](https://github.com/alexedwards) for his great package [scs](https://github.com/alexedwards/scs)
+
+_This is a fork of [spazzymoto/echo-scs-session](https://github.com/spazzymoto/echo-scs-session) package with bug fixes_
+
+This package includes a fix to critical issue [Middleware does not set max-age/expires #1](https://github.com/spazzymoto/echo-scs-session/issues/1).
+After spending an hour trying to figure this out, I found the bug in the middleware and decided to fix it under a new repo, 
+update the dependency packages and the Go version
+
+The upstream is not maintained anymore.
 
 ## Features (As per [SCS](https://github.com/alexedwards/scs))
 
@@ -23,10 +30,10 @@ All credit must go to [alexedwards](https://github.com/alexedwards) for his grea
 
 ### Installation
 
-This package requires Go 1.12 or newer.
+This package requires Go 1.22 or newer.
 
 ```
-$ go get github.com/spazzymoto/echo-scs-session
+$ go get github.com/canidam/echo-scs-session
 ```
 
 ### Basic Use
@@ -41,7 +48,7 @@ import (
 
 	"github.com/alexedwards/scs/v2"
 	"github.com/labstack/echo/v4"
-	"github.com/spazzymoto/echo-scs-session"
+	"github.com/canidam/echo-scs-session"
 )
 
 var sessionManager *scs.SessionManager
@@ -83,9 +90,9 @@ $ curl -i --cookie-jar cj --cookie cj localhost:4000/put
 HTTP/1.1 200 OK
 Cache-Control: no-cache="Set-Cookie"
 Content-Type: text/plain; charset=UTF-8
-Set-Cookie: session=0KumL8V5WYuvZwEQj2IPrYvm-cC3y7m8xQWLhTmxq_U; Path=/; HttpOnly; SameSite=Lax
+Set-Cookie: session=0KumL8V5WYuvZwEQj2IPrYvm-cC3y7m8xQWLhTmxq_U; Path=/; HttpOnly; SameSite=Lax; Expires=Tue, 2 April 2024 09:28:00 GMT;
 Vary: Cookie
-Date: Thu, 20 May 2021 14:47:23 GMT
+Date: Mon, 1 April 2024 08:28:00 GMT
 Content-Length: 0
 
 $ curl -i --cookie-jar cj --cookie cj localhost:4000/get
