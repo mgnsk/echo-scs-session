@@ -10,11 +10,15 @@ import (
 
 type Config struct {
 	Skipper        middleware.Skipper
+	ErrorHandler   func(err error, c echo.Context) // function to handle errors in Echo response hook.
 	SessionManager *scs.SessionManager
 }
 
 var DefaultSessionConfig = Config{
 	Skipper: middleware.DefaultSkipper,
+	ErrorHandler: func(err error, c echo.Context) {
+		panic(err)
+	},
 }
 
 func LoadAndSave(sessionManager *scs.SessionManager) echo.MiddlewareFunc {
@@ -28,6 +32,10 @@ func LoadAndSaveWithConfig(config Config) echo.MiddlewareFunc {
 
 	if config.Skipper == nil {
 		config.Skipper = DefaultSessionConfig.Skipper
+	}
+
+	if config.ErrorHandler == nil {
+		config.ErrorHandler = DefaultSessionConfig.ErrorHandler
 	}
 
 	if config.SessionManager == nil {
@@ -61,7 +69,8 @@ func LoadAndSaveWithConfig(config Config) echo.MiddlewareFunc {
 				case scs.Modified:
 					token, expiry, err := config.SessionManager.Commit(ctx)
 					if err != nil {
-						panic(err)
+						config.ErrorHandler(err, c)
+						return
 					}
 
 					config.SessionManager.WriteSessionCookie(ctx, c.Response().Writer, token, expiry)
